@@ -13,6 +13,22 @@ const saveTodos = function (todos) {
     localStorage.setItem('todos', JSON.stringify(todos))
 }
 
+//remove a todo from the list
+const removeTodo = function(id) {
+    const todoIndex = todos.findIndex(function (todo) {
+        return todo.id === id
+    })
+
+    if (todoIndex > -1) {
+        todos.splice(todoIndex, 1)
+    }
+}
+
+// toggle the completed value for a todo
+const toggleTodo = function (todo) {
+    todo.completed = !todo.completed
+}
+
 //render application todos
 const renderTodos = function (todos, filters) {
     const filteredTodos = todos.filter(function (todo) {
@@ -37,15 +53,46 @@ const renderTodos = function (todos, filters) {
 
 //generate the DOM element for individual note
 const generateTodoDOM = function (todo) {
-    const p = document.createElement('p')
-    if(todo.text.length > 0) {
-        p.textContent = todo.text
+    const todoEl = document.createElement('div')
+    const checkbox = document.createElement('input')
+    const textEl = document.createElement('span')
+    const button = document.createElement('button')
+
+    //setup the todo checkbox
+    checkbox.setAttribute('type', 'checkbox')
+    checkbox.checked = todo.completed
+    todoEl.appendChild(checkbox)
+
+    checkbox.addEventListener('change', function (){
+        // if  (this.checked) {
+            // todo.completed = !todo.completed
+        // } else {
+        //     todo.completed = false
+        // }
+        toggleTodo(todo)
+        saveTodos(todos)
+        renderTodos(todos, filters)
+    } )
+
+    //setup the todo text
+    if (todo.text.length > 0) {
+        textEl.textContent = todo.text
     } 
     else {
-        p.textContent = 'no content'
+        textEl.textContent = 'no content'
     }
+    todoEl.appendChild(textEl)
 
-    return p
+    //setup the remove button
+    button.textContent = 'x'
+    todoEl.appendChild(button)
+    button.addEventListener('click', function () {
+        removeTodo(todo.id)
+        saveTodos(todos)
+        renderTodos(todos, filters)
+    })
+
+    return todoEl
 }
 
 // get DOM elements for list summary
