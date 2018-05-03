@@ -1,7 +1,7 @@
 // read existing todos from localStorage
 const getSavedTodos = () => {
     const todosJSON = localStorage.getItem('todos')
-    return todosJSON !== null ? JSON.parse(todosJSON) : []
+    return todosJSON ? JSON.parse(todosJSON) : []
 }
 
 //save todos to localStorage
@@ -18,6 +18,13 @@ const removeTodo = (id) => {
 
 // toggle the completed value for a todo
 const toggleTodo = (todo) => todo.completed = !todo.completed
+// const toggleTodo = (id) => {
+//     const todo = todos.find((todo) => todo.id === id)
+
+//     if (todo) {
+//     todo.completed = !todo.completed
+//     }
+// }
 
 //render application todos
 const renderTodos = (todos, filters) => {
